@@ -52,7 +52,7 @@ latest_date_df = filtered_df.sort_values(by='Tarikh', ascending=False).drop_dupl
 latest_date_df = latest_date_df.reset_index(drop=True)
 latest_date_df.index += 1
 # Format 'Harga' column to display two decimal places
-latest_date_df['Harga (RM)'] = latest_date_df['Harga (RM)'].round(2)
+latest_date_df['Harga (RM)'] = latest_date_df['Harga (RM)'].map('{:.2f}'.format))
 
 # Add a gap between "Pilih Item" filter and st.dataframe
 st.markdown("---")
