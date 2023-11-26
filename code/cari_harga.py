@@ -5,7 +5,7 @@ st.set_page_config(
     page_icon="💰",
 )
 
-st.write("# Selamat Datang ke C Harga! 👋")
+st.write("# Selamat Datang ke Cari Harga! 👋")
 
 #st.sidebar.success("Select a demo above.")
 
