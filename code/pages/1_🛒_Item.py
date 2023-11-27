@@ -71,7 +71,7 @@ kategori_item_filter = st.selectbox("Pilih Kategori Item", kategori_item_options
 # Update available items based on selected Kategori Item
 available_items = sorted(df[(df['Negeri'] == negeri_filter) & (df['Daerah'] == daerah_filter) & (df['Kategori Item'] == kategori_item_filter)]['Item'].unique())  # Sort the unique item values
 
-item_filter = st.multiselect("Pilih Item", available_items)
+item_filter = st.multiselect("Pilih Item", available_items, placeholder='Pilih satu atau pelbagai item')
 
 # Apply filters
 filtered_df = df[
@@ -121,7 +121,7 @@ for selected_item in item_filter:
             x='Premis',
             y='Harga (RM)',
             labels={'Item': 'Item', 'Tarikh': 'Tarikh', 'Harga (RM)': 'Harga (RM)', 'Unit': 'Unit', 'Premis': 'Premis'},
-            title=f'Harga (RM) Semasa {unit} {selected_item} [{latest_date}]',
+            title=f'Harga Semasa {unit} {selected_item} [{latest_date}]',
             text='Harga (RM)',
             hover_data={'Item': True, 'Tarikh': True, 'Harga (RM)': ':.2f', 'Unit': True, 'Premis': True}
         )
@@ -137,7 +137,7 @@ for selected_item in item_filter:
             y='Harga (RM)',
             color='Premis',
             labels={'Item': 'Item', 'Tarikh': 'Tarikh', 'Harga (RM)': 'Harga (RM)', 'Unit': 'Unit', 'Premis': 'Premis'},
-            title=f'Perubahan Harga (RM) Bagi {unit} {selected_item} Pada Bulan {current_month}',
+            title=f'Perubahan Harga Bagi {unit} {selected_item} Pada Bulan {current_month}',
             hover_data={'Item': True, 'Tarikh': True, 'Harga (RM)': ':.2f', 'Unit': True, 'Premis': True}
         )
         st.plotly_chart(fig_line, use_container_width=True)
