@@ -62,7 +62,7 @@ daerah_filter = st.selectbox("Pilih Daerah", daerah_options)
 
 # Update Premis filter based on selected Negeri and Daerah
 premis_options = sorted(df[(df['Negeri'] == negeri_filter) & (df['Daerah'] == daerah_filter)]['Premis'].unique())
-premis_filter = st.multiselect("Pilih Premis", premis_options)
+premis_filter = st.selectbox("Pilih Premis", premis_options)
 
 # Apply filters
 filtered_df = df[
