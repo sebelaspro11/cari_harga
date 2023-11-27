@@ -43,7 +43,7 @@ st.markdown(
 )
 @st.cache_data  # Use st.cache to cache the data-loading function
 def load_data():
-    df = pd.read_parquet('D:/streamlit/pricecatch/df_price_final.parquet')
+    df = pd.read_parquet('data/df_price_final.parquet')
     df['Tarikh'] = pd.to_datetime(df['Tarikh'])
     df.sort_values(by='Tarikh', inplace=True)
     df['Tarikh'] = df['Tarikh'].dt.strftime('%Y-%m-%d')
