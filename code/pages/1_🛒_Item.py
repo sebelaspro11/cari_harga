@@ -4,11 +4,46 @@ import plotly.express as px
 import calendar
 from datetime import datetime
 
-st.set_page_config(layout="wide")
 
+st.set_page_config(layout="wide")
+hide_streamlit_style = """
+                <style>
+                div[data-testid="stToolbar"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                div[data-testid="stDecoration"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                div[data-testid="stStatusWidget"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                #MainMenu {
+                visibility: hidden;
+                height: 0%;
+                }
+                header {
+                visibility: hidden;
+                height: 0%;
+                }
+                footer {
+                visibility: hidden;
+                height: 0%;
+                }
+                </style>
+                """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+st.markdown(
+   ' #### Pilih Negeri, Daerah, Kategori Item dan Item untuk membuat perbandingan harga'
+)
 @st.cache_data  # Use st.cache to cache the data-loading function
 def load_data():
-    df = pd.read_parquet('data/df_price_final.parquet')
+    df = pd.read_parquet('D:/streamlit/pricecatch/df_price_final.parquet')
     df['Tarikh'] = pd.to_datetime(df['Tarikh'])
     df.sort_values(by='Tarikh', inplace=True)
     df['Tarikh'] = df['Tarikh'].dt.strftime('%Y-%m-%d')
@@ -35,6 +70,7 @@ kategori_item_filter = st.selectbox("Pilih Kategori Item", kategori_item_options
 
 # Update available items based on selected Kategori Item
 available_items = sorted(df[(df['Negeri'] == negeri_filter) & (df['Daerah'] == daerah_filter) & (df['Kategori Item'] == kategori_item_filter)]['Item'].unique())  # Sort the unique item values
+
 item_filter = st.multiselect("Pilih Item", available_items)
 
 # Apply filters
@@ -85,7 +121,7 @@ for selected_item in item_filter:
             x='Premis',
             y='Harga (RM)',
             labels={'Item': 'Item', 'Tarikh': 'Tarikh', 'Harga (RM)': 'Harga (RM)', 'Unit': 'Unit', 'Premis': 'Premis'},
-            title=f'Harga Semasa {unit} {selected_item} [{latest_date}]',
+            title=f'Harga (RM) Semasa {unit} {selected_item} [{latest_date}]',
             text='Harga (RM)',
             hover_data={'Item': True, 'Tarikh': True, 'Harga (RM)': ':.2f', 'Unit': True, 'Premis': True}
         )
@@ -101,7 +137,7 @@ for selected_item in item_filter:
             y='Harga (RM)',
             color='Premis',
             labels={'Item': 'Item', 'Tarikh': 'Tarikh', 'Harga (RM)': 'Harga (RM)', 'Unit': 'Unit', 'Premis': 'Premis'},
-            title=f'Perubahan Harga Bagi {unit} {selected_item} Pada Bulan {current_month}',
+            title=f'Perubahan Harga (RM) Bagi {unit} {selected_item} Pada Bulan {current_month}',
             hover_data={'Item': True, 'Tarikh': True, 'Harga (RM)': ':.2f', 'Unit': True, 'Premis': True}
         )
         st.plotly_chart(fig_line, use_container_width=True)
