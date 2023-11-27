@@ -5,6 +5,39 @@ st.set_page_config(
     page_icon="💰",
 )
 
+hide_streamlit_style = """
+                <style>
+                div[data-testid="stToolbar"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                div[data-testid="stDecoration"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                div[data-testid="stStatusWidget"] {
+                visibility: hidden;
+                height: 0%;
+                position: fixed;
+                }
+                #MainMenu {
+                visibility: hidden;
+                height: 0%;
+                }
+                header {
+                visibility: hidden;
+                height: 0%;
+                }
+                footer {
+                visibility: hidden;
+                height: 0%;
+                }
+                </style>
+                """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+
 st.write("# Selamat Datang ke Cari Harga! 👋")
 
 #st.sidebar.success("Select a demo above.")
@@ -12,7 +45,7 @@ st.write("# Selamat Datang ke Cari Harga! 👋")
 st.markdown(
     """
     Web Aplikasi ini bertujuan untuk memudahkan pengguna membuat perbandingan harga kepada barangan-barangan asas dan keperluan harian.\n
-    Data akan dikemaskini setiap hari bergantung kepada data daripada 
+    Data akan dikemaskini bergantung kepada data daripada 
     Kementerian Perdagangan Dalam Negeri Dan Kos Sara Hidup (KPDN).
     
     ### 🛒 Item
@@ -47,4 +80,4 @@ def local_css(file_name):
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 
-local_css("css/style.css")
+local_css("D:/streamlit/pricecatch/css/style.css")
