@@ -6,6 +6,62 @@ from datetime import datetime
 
 
 st.set_page_config(layout="wide")
+
+@st.cache_data
+def load_data():
+    # URLs for data
+    URL_DATA_premise = 'https://storage.data.gov.my/pricecatcher/lookup_premise.parquet'
+    URL_DATA_item = 'https://storage.data.gov.my/pricecatcher/lookup_item.parquet'
+    URL_DATA_price = 'https://storage.data.gov.my/pricecatcher/pricecatcher_2023-11.parquet'
+
+    # Load premise data
+    df_premise = pd.read_parquet(URL_DATA_premise)
+    if 'date' in df_premise.columns:
+        df_premise['date'] = pd.to_datetime(df_premise['date'])
+    df_premise.drop(index=0, inplace=True)
+
+    # Load item data
+    df_item = pd.read_parquet(URL_DATA_item)
+    if 'date' in df_item.columns:
+        df_item['date'] = pd.to_datetime(df_item['date'])
+    df_item.drop(index=0, inplace=True)
+
+    # Load price data for November
+    df_price_nov = pd.read_parquet(URL_DATA_price)
+    if 'date' in df_price_nov.columns:
+        df_price_nov['date'] = pd.to_datetime(df_price_nov['date'])
+
+    # Merge premise and price datasets
+    df_price_premise = pd.merge(df_price_nov, df_premise, left_on="premise_code", right_on="premise_code")
+
+    # Merge item data with the merged premise and price dataset
+    df_price_final = pd.merge(df_price_premise, df_item, left_on="item_code", right_on="item_code")
+
+    # Select relevant columns
+    df_price_final = df_price_final[['date', 'price', 'premise', 'address', 'premise_type', 'state', 'district', 'item', 'unit', 'item_group', 'item_category']]
+
+    # Rename columns
+    new_names = {
+        "date": "Tarikh",
+        "price": "Harga (RM)",
+        "premise": "Premis",
+        "address": "Alamat",
+        "premise_type": "Jenis Premis",
+        "item": "Item",
+        "state": "Negeri",
+        "district": "Daerah",
+        "unit": "Unit",
+        "item_group": "Kumpulan Item",
+        "item_category": "Kategori Item"
+    }
+
+    df_price_final = df_price_final.rename(columns=new_names)
+
+    return df_price_final
+
+# Usage
+df = load_data()
+
 hide_streamlit_style = """
                 <style>
                 div[data-testid="stToolbar"] {
@@ -41,20 +97,12 @@ st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 st.markdown(
    ' #### Pilih Negeri, Daerah, Kategori Item dan Item untuk membuat perbandingan harga'
 )
-@st.cache_data  # Use st.cache to cache the data-loading function
-def load_data():
-    df = pd.read_parquet('data/df_price_final.parquet')
-    df['Tarikh'] = pd.to_datetime(df['Tarikh'])
-    df.sort_values(by='Tarikh', inplace=True)
-    df['Tarikh'] = df['Tarikh'].dt.strftime('%Y-%m-%d')
-    return df
+
 
 def get_current_month():
     now = datetime.now()
     return calendar.month_name[now.month]
 
-# Load data using the cached function
-df = load_data()
 
 # Filters
 negeri_filter_options = sorted(df['Negeri'].unique())  # Sort the unique negeri values
@@ -71,7 +119,9 @@ kategori_item_filter = st.selectbox("Pilih Kategori Item", kategori_item_options
 # Update available items based on selected Kategori Item
 available_items = sorted(df[(df['Negeri'] == negeri_filter) & (df['Daerah'] == daerah_filter) & (df['Kategori Item'] == kategori_item_filter)]['Item'].unique())  # Sort the unique item values
 
-item_filter = st.multiselect("Pilih Item", available_items, placeholder='Pilih satu atau pelbagai item')
+
+
+item_filter = st.multiselect("Pilih Item", available_items, placeholder='Pilih satu atau pelbagai item',)
 
 # Apply filters
 filtered_df = df[
