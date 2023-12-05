@@ -8,7 +8,7 @@ def load_data():
     # URLs for data
     URL_DATA_premise = 'https://storage.data.gov.my/pricecatcher/lookup_premise.parquet'
     URL_DATA_item = 'https://storage.data.gov.my/pricecatcher/lookup_item.parquet'
-    URL_DATA_price = 'https://storage.data.gov.my/pricecatcher/pricecatcher_2023-11.parquet'
+    URL_DATA_price = 'https://storage.data.gov.my/pricecatcher/pricecatcher_2023-12.parquet'
 
     # Load premise data
     df_premise = pd.read_parquet(URL_DATA_premise)
