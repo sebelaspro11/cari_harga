@@ -7,7 +7,7 @@ from datetime import datetime
 
 st.set_page_config(layout="wide")
 
-@st.cache_data
+@st.cache_data(ttl = 86400)
 def load_data():
     # URLs for data
     URL_DATA_premise = 'https://storage.data.gov.my/pricecatcher/lookup_premise.parquet'
